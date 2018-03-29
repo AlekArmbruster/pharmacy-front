@@ -8,33 +8,37 @@ import 'rxjs/Rx';
 @Injectable()
 export class MedicineService {
 
-	
-		private NAMESPACE: string = 'Medicine';
-	
+
+	private NAMESPACE: string = 'Medicine';
 
 
 
-    constructor(private dataService: DataService<Medicine>) {
-    };
 
-    public getAll(): Observable<Medicine[]> {
-        return this.dataService.getAll(this.NAMESPACE);
-    }
+	constructor(private dataService: DataService<Medicine>) {
+	};
 
-    public getAsset(id: any): Observable<Medicine> {
-      return this.dataService.getSingle(this.NAMESPACE, id);
-    }
+	public getAll(): Observable<Medicine[]> {
+		return this.dataService.getAll(this.NAMESPACE);
+	}
 
-    public addAsset(itemToAdd: any): Observable<Medicine> {
-      return this.dataService.add(this.NAMESPACE, itemToAdd);
-    }
+	public getAsset(id: any): Observable<Medicine> {
+		return this.dataService.getSingle(this.NAMESPACE, id);
+	}
 
-    public updateAsset(id: any, itemToUpdate: any): Observable<Medicine> {
-      return this.dataService.update(this.NAMESPACE, id, itemToUpdate);
-    }
+	public addAsset(itemToAdd: any): Observable<Medicine> {
+		return this.dataService.add(this.NAMESPACE, itemToAdd);
+	}
 
-    public deleteAsset(id: any): Observable<Medicine> {
-      return this.dataService.delete(this.NAMESPACE, id);
-    }
+	public updateAsset(id: any, itemToUpdate: any): Observable<Medicine> {
+		return this.dataService.update(this.NAMESPACE, id, itemToUpdate);
+	}
+
+	public deleteAsset(id: any): Observable<Medicine> {
+		return this.dataService.delete(this.NAMESPACE, id);
+	}
+
+	public tradeAsset(id: any): Observable<Medicine> {
+		return this.dataService.trade(this.NAMESPACE, id);
+	}
 
 }

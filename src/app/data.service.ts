@@ -7,71 +7,85 @@ import { Configuration } from './configuration';
 
 @Injectable()
 export class DataService<Type> {
-    private resolveSuffix: string = '?resolve=true';
-    private actionUrl: string;
-    private headers: Headers;
+	private resolveSuffix: string = '?resolve=true';
+	private actionUrl: string;
+	private headers: Headers;
 
-    constructor(private http: Http, private _configuration: Configuration) {
-        this.actionUrl = _configuration.ServerWithApiUrl;
-        this.headers = new Headers();
-        this.headers.append('Content-Type', 'application/json');
-        this.headers.append('Accept', 'application/json');
-    }
+	constructor(private http: Http, private _configuration: Configuration) {
+		this.actionUrl = _configuration.ServerWithApiUrl;
+		this.headers = new Headers();
+		this.headers.append('Content-Type', 'application/json');
+		this.headers.append('Accept', 'application/json');
+	}
 
-    public getAll(ns: string): Observable<Type[]> {
-        console.log('GetAll ' + ns + ' to ' + this.actionUrl + ns);
-        return this.http.get(`${this.actionUrl}${ns}`)
-          .map(this.extractData)
-          .catch(this.handleError);
-    }
+	public getAll(ns: string): Observable<Type[]> {
+		console.log('GetAll ' + ns + ' to ' + this.actionUrl + ns);
+		return this.http.get(`${this.actionUrl}${ns}`)
+			.map(this.extractData)
+			.catch(this.handleError);
+	}
 
-    public getSingle(ns: string, id: string): Observable<Type> {
-        console.log('GetSingle ' + ns);
+	public getSingle(ns: string, id: string): Observable<Type> {
+		console.log('GetSingle ' + ns);
 
-        return this.http.get(this.actionUrl + ns + '/' + id + this.resolveSuffix)
-          .map(this.extractData)
-          .catch(this.handleError);
-    }
+		return this.http.get(this.actionUrl + ns + '/' + id + this.resolveSuffix)
+			.map(this.extractData)
+			.catch(this.handleError);
+	}
 
-    public add(ns: string, asset: Type): Observable<Type> {
-        console.log('Entered DataService add');
-        console.log('Add ' + ns);
-        console.log('asset', asset);
+	public add(ns: string, asset: Type): Observable<Type> {
+		console.log('Entered DataService add');
+		console.log('Add ' + ns);
+		console.log('asset', asset);
 
-        return this.http.post(this.actionUrl + ns, asset)
-          .map(this.extractData)
-          .catch(this.handleError);
-    }
+		return this.http.post(this.actionUrl + ns, asset)
+			.map(this.extractData)
+			.catch(this.handleError);
+	}
 
-    public update(ns: string, id: string, itemToUpdate: Type): Observable<Type> {
-        console.log('Update ' + ns);
-        console.log('what is the id?', id);
-        console.log('what is the updated item?', itemToUpdate);
-        console.log('what is the updated item?', JSON.stringify(itemToUpdate));
-        return this.http.put(`${this.actionUrl}${ns}/${id}`, itemToUpdate)
-          .map(this.extractData)
-          .catch(this.handleError);
-    }
+	public update(ns: string, id: string, itemToUpdate: Type): Observable<Type> {
+		console.log('Update ' + ns);
+		console.log('what is the id?', id);
+		console.log('what is the updated item?', itemToUpdate);
+		console.log('what is the updated item?', JSON.stringify(itemToUpdate));
+		return this.http.put(`${this.actionUrl}${ns}/${id}`, itemToUpdate)
+			.map(this.extractData)
+			.catch(this.handleError);
+	}
 
-    public delete(ns: string, id: string): Observable<Type> {
-        console.log('Delete ' + ns);
+	public delete(ns: string, id: string): Observable<Type> {
+		console.log('Delete ' + ns);
 
-        return this.http.delete(this.actionUrl + ns + '/' + id)
-          .map(this.extractData)
-          .catch(this.handleError);
-    }
+		return this.http.delete(this.actionUrl + ns + '/' + id)
+			.map(this.extractData)
+			.catch(this.handleError);
+	}
 
-    private handleError(error: any): Observable<string> {
-        // In a real world app, we might use a remote logging infrastructure
-        // We'd also dig deeper into the error to get a better message
-        let errMsg = (error.message) ? error.message :
-          error.status ? `${error.status} - ${error.statusText}` : 'Server error';
-        console.error(errMsg); // log to console instead
-        return Observable.throw(errMsg);
-    }
+	public trade(ns: string, id: string): Observable<Type> {
+		console.log('Trade ' + ns);
 
-    private extractData(res: Response): any {
-        return res.json();
-    }
+		let assetToTrade = {
+			"$class": "org.acme.biznet.Trade",
+			"medicine": "org.acme.biznet.Medicine#" + id,
+			"newPharmacy": "org.acme.biznet.Pharmacy#1"
+		};
+
+		return this.http.post(this.actionUrl + ns, assetToTrade)
+			.map(this.extractData)
+			.catch(this.handleError);
+	}
+
+	private handleError(error: any): Observable<string> {
+		// In a real world app, we might use a remote logging infrastructure
+		// We'd also dig deeper into the error to get a better message
+		let errMsg = (error.message) ? error.message :
+			error.status ? `${error.status} - ${error.statusText}` : 'Server error';
+		console.error(errMsg); // log to console instead
+		return Observable.throw(errMsg);
+	}
+
+	private extractData(res: Response): any {
+		return res.json();
+	}
 
 }

@@ -6,18 +6,18 @@ import { HomeComponent } from './home/home.component';
 import { MedicineComponent } from './Medicine/Medicine.component';
 
 const routes: Routes = [
-    // { path: 'transaction', component: TransactionComponent },
-    {path: '', component: HomeComponent},
-		
-		{ path: 'Medicine', component: MedicineComponent},
-		
-		{path: '**', redirectTo:''}
+
+	{ path: '', redirectTo: 'Medicine', pathMatch: 'full' },
+
+	{ path: 'Medicine', component: MedicineComponent },
+
+	{ path: '**', redirectTo: '' }
 
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule],
-  providers: []
+	imports: [RouterModule.forRoot(routes)],
+	exports: [RouterModule],
+	providers: []
 })
 export class AppRoutingModule { }
